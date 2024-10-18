@@ -20,16 +20,26 @@ class userController
     }
 
     public function register() {
-        if (empty($_POST['username']) || empty($_POST['password'])) {
-            return json_encode(['status' => 'error', 'message' => 'Username and password are required']);
+        if (empty($_POST['username']) || empty($_POST['email']) || empty($_POST['age']) || empty($_POST['address']) || empty($_POST['password'])) {
+            return json_encode(['status' => 'error', 'message' => 'All fields are required']);
         }
+        
         $db = new database();
         $con = $db->initDatabase();
-        $stmt = $con->prepare("INSERT INTO user (username, password, role) VALUES (?, ?, ?)");
+        
+        // Update this line to match your actual column names
+        $stmt = $con->prepare("INSERT INTO user (username, email, age, address, password) VALUES (?, ?, ?, ?, ?)");
+        
         $hashedPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $role = 'user'; // Default role for new registrations
+        
         try {
-            $stmt->execute([$_POST['username'], $hashedPassword, $role]);
+            $stmt->execute([
+                $_POST['username'],
+                $_POST['email'],
+                $_POST['age'],
+                $_POST['address'],
+                $hashedPassword
+            ]);
             return json_encode(['status' => 'success']);
         } catch (PDOException $e) {
             return json_encode(['status' => 'error', 'message' => 'Registration failed: ' . $e->getMessage()]);
@@ -76,23 +86,25 @@ class userController
 
     public function getUserDashboardInfo() {
         if (!isset($_SESSION['user_id'])) {
-            return json_encode(['status' => 'failed']);
+            return json_encode(['status' => 'error', 'message' => 'User not logged in']);
         }
         
         $db = new database();
         $con = $db->initDatabase();
-        $stmt = $con->prepare("SELECT user, email FROM user WHERE id = ?");
+        $stmt = $con->prepare("SELECT username, email, age, address FROM user WHERE id = ?");
         $stmt->execute([$_SESSION['user_id']]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($user) {
             return json_encode([
                 'status' => 'success',
-                'username' => $user['user'],
-                'email' => $user['email']
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'age' => $user['age'],
+                'address' => $user['address']
             ]);
         } else {
-            return json_encode(['status' => 'failed']);
+            return json_encode(['status' => 'error', 'message' => 'User not found']);
         }
     }
 

@@ -12,16 +12,28 @@
     <div class="container-fluid">
         <div class="row vh-100">
             <div class="col-md-6 d-flex align-items-center justify-content-center bg_1">
-                <h1 class="text-white">UMS</h1>
+                <h1 class="text-white">User Management System</h1>
             </div>
             <div class="col-md-6 d-flex align-items-center justify-content-center">
-                <div class="card shadow-lg" style="width: 22rem;">
+                <div class="card shadow-lg" style="width: 24rem;">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4">Register</h3>
                         <form id="registerForm">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
                                 <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" name="age" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea class="form-control" id="address" name="address" required></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>

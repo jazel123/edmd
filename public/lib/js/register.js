@@ -3,11 +3,14 @@ $(document).ready(function () {
     e.preventDefault();
     
     const username = $("#username").val().trim();
+    const email = $("#email").val().trim();
+    const age = $("#age").val();
+    const address = $("#address").val().trim();
     const password = $("#password").val();
     const confirmPassword = $("#confirmPassword").val();
 
-    if (!username || !password) {
-      alert("Username and password are required!");
+    if (!username || !email || !age || !address || !password) {
+      alert("All fields are required!");
       return;
     }
 
@@ -22,6 +25,9 @@ $(document).ready(function () {
       data: {
         type: "register",
         username: username,
+        email: email,
+        age: age,
+        address: address,
         password: password
       },
       success: function (data) {

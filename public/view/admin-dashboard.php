@@ -46,6 +46,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin' || $_SESS
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Admin Dashboard</h1>
                 </div>
+                <div class="alert alert-primary" role="alert">
+                    <h3 class="mb-0"><strong>Welcome, Admin!</strong></h3>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">

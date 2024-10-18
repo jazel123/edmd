@@ -51,7 +51,10 @@ try {
                 echo $ctr->getAdminDashboardStats();
                 break;
             case 'getUserDashboardInfo':
-                echo $ctr->getUserDashboardInfo();
+                error_log("getUserDashboardInfo case reached");
+                $result = $ctr->getUserDashboardInfo();
+                error_log("getUserDashboardInfo result: " . $result);
+                echo $result;
                 break;
             case 'createAdminAccount':
                 echo $ctr->createAdminAccount();

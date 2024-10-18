@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'user') {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] === 'admin') {
     header("Location: login.php");
     exit();
 }
@@ -41,6 +41,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'user') {
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">User Dashboard</h1>
                 </div>
+                <div class="alert alert-success" role="alert">
+                    <h3 class="mb-0"><strong>Welcome, <span id="welcomeUsername"></span>!</strong></h3>
+                </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -48,14 +51,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'user') {
                                 <h5 class="card-title">User Information</h5>
                                 <p class="card-text">Username: <span id="username"></span></p>
                                 <p class="card-text">Email: <span id="email"></span></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Account Actions</h5>
-                                <button id="changePassword" class="btn btn-primary">Change Password</button>
+                                <p class="card-text">Age: <span id="age"></span></p>
+                                <p class="card-text">Address: <span id="address"></span></p>
                             </div>
                         </div>
                     </div>
