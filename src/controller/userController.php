@@ -116,4 +116,19 @@ class userController
         $stmt->execute(['Admin', $hashedPassword, 'admin', $hashedPassword, 'admin']);
         return json_encode(['status' => 'success']);
     }
+
+    public function searchUsers($searchTerm) {
+        $query = "SELECT id, username, created_at FROM users WHERE username LIKE :searchTerm";
+        $params = [':searchTerm' => "%$searchTerm%"];
+        
+        try {
+            $stmt = $this->db->prepare($query);
+            $stmt->execute($params);
+            $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return json_encode($users);
+        } catch (PDOException $e) {
+            return json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
 }

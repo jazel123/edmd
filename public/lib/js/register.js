@@ -2,52 +2,62 @@ $(document).ready(function () {
   $("#registerForm").submit(function (e) {
     e.preventDefault();
     
-    const username = $("#username").val().trim();
-    const email = $("#email").val().trim();
-    const age = $("#age").val();
-    const address = $("#address").val().trim();
-    const password = $("#password").val();
-    const confirmPassword = $("#confirmPassword").val();
+    // Get form data
+    var formData = {
+      username: $("#username").val(),
+      email: $("#email").val(),
+      age: $("#age").val(),
+      address: $("#address").val(),
+      password: $("#password").val(),
+      confirmPassword: $("#confirmPassword").val()
+    };
 
-    if (!username || !email || !age || !address || !password) {
-      alert("All fields are required!");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-
+    // Send AJAX request
     $.ajax({
-      type: "post",
-      url: "../../src/routes/routes.php",
-      data: {
-        type: "register",
-        username: username,
-        email: email,
-        age: age,
-        address: address,
-        password: password
-      },
-      success: function (data) {
-        try {
-          const response = JSON.parse(data);
-          if (response.status === "success") {
-            alert("Registration successful! Please login.");
+      type: "POST",
+      url: "../controller/register.php",
+      data: formData,
+      dataType: "json",
+      encode: true
+    })
+    .done(function (data) {
+      if (data.success) {
+        // Show success alert using SweetAlert2
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration Successful!',
+          text: 'You can now log in to your account.',
+          confirmButtonText: 'Go to Login',
+          confirmButtonColor: '#28a745',
+          timer: 3000,
+          timerProgressBar: true
+        }).then((result) => {
+          if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer) {
             window.location.href = "login.php";
-          } else {
-            alert("Registration failed: " + (response.message || "Unknown error"));
           }
-        } catch (e) {
-          console.error("Invalid JSON response:", data);
-          alert("An unexpected error occurred. Please try again later.");
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.error("AJAX error:", textStatus, errorThrown);
-        alert("An error occurred. Please try again later.");
+        });
+        
+        // Clear form fields
+        $("#registerForm")[0].reset();
+      } else {
+        // Show error message using SweetAlert2
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: data.message || 'Please try again.',
+          confirmButtonColor: '#dc3545'
+        });
       }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      console.error("AJAX request failed:", textStatus, errorThrown);
+      // Show error message using SweetAlert2
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong. Please try again later.',
+        confirmButtonColor: '#dc3545'
+      });
     });
   });
 });

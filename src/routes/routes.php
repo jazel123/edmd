@@ -35,7 +35,10 @@ try {
                 echo $ctr->register();
                 break;
             case 'getAllUsers':
-                echo $ctr->getAllUsers();
+                error_log("getAllUsers request received");
+                $result = $ctr->getAllUsers();
+                error_log("getAllUsers result: " . $result);
+                echo $result;
                 break;
             case 'updateUser':
                 echo $ctr->updateUser($_POST['userId'], $_POST['newUsername']);
@@ -58,6 +61,13 @@ try {
                 break;
             case 'createAdminAccount':
                 echo $ctr->createAdminAccount();
+                break;
+            case 'searchUsers':
+                if (isset($_POST['searchTerm'])) {
+                    echo $ctr->searchUsers($_POST['searchTerm']);
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Search term not provided']);
+                }
                 break;
             default:
                 echo json_encode(['status' => 'invalid_request']);

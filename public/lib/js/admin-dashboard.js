@@ -1,5 +1,6 @@
 $(document).ready(function() {
     loadAdminDashboardStats();
+    loadRecentUserActivity();
 
     $("#logout").click(function(e) {
         e.preventDefault();
@@ -26,6 +27,8 @@ $(document).ready(function() {
                 if (stats.status === "success") {
                     $("#totalUsers").text(stats.totalUsers);
                     $("#newUsers").text(stats.newUsers);
+                    $("#activeUsers").text(stats.activeUsers);
+                    $("#inactiveUsers").text(stats.inactiveUsers);
                 } else {
                     alert("Error loading dashboard statistics");
                 }
@@ -35,5 +38,33 @@ $(document).ready(function() {
             }
         });
     }
-});
 
+    function loadRecentUserActivity() {
+        $.ajax({
+            type: "post",
+            url: "../../src/routes/routes.php",
+            data: { type: "getRecentUserActivity" },
+            success: function(data) {
+                const activities = JSON.parse(data);
+                if (activities.status === "success") {
+                    let tableHtml = "";
+                    activities.data.forEach(activity => {
+                        tableHtml += `
+                            <tr>
+                                <td>${activity.username}</td>
+                                <td>${activity.action}</td>
+                                <td>${activity.timestamp}</td>
+                            </tr>
+                        `;
+                    });
+                    $("#recentActivityTable").html(tableHtml);
+                } else {
+                    alert("Error loading recent user activity");
+                }
+            },
+            error: function() {
+                alert("Error loading recent user activity");
+            }
+        });
+    }
+});

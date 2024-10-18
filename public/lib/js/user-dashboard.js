@@ -1,42 +1,70 @@
 $(document).ready(function() {
-    $.ajax({
-        type: "post",
-        url: "../../src/routes/routes.php",
-        data: { type: "getUserDashboardInfo" },
-        success: function(data) {
-            try {
-                const response = JSON.parse(data);
-                if (response.status === 'success') {
-                    $('#welcomeUsername').text(response.username);
-                    $('#username').text(response.username);
-                    $('#email').text(response.email);
-                    $('#age').text(response.age);
-                    $('#address').text(response.address);
-                } else {
-                    console.error("Error:", response.message);
-                    alert("Error loading user information: " + response.message);
-                }
-            } catch (e) {
-                console.error("Error parsing JSON:", e, "Raw data:", data);
-                alert("An unexpected error occurred. Please check the console for details.");
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("AJAX error:", textStatus, errorThrown);
-            alert("An error occurred while loading user information. Please check the console for details.");
+    // Load user information
+    loadUserInfo();
+
+    // Change Password button click event
+    $("#changePasswordBtn").click(function() {
+        const currentPassword = $("#currentPassword").val();
+        const newPassword = $("#newPassword").val();
+        const confirmPassword = $("#confirmPassword").val();
+
+        if (newPassword !== confirmPassword) {
+            alert("New password and confirm password do not match.");
+            return;
         }
+
+        $.ajax({
+            url: "../../src/routes/routes.php",
+            type: "POST",
+            data: {
+                type: "changePassword",
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            },
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.status === "success") {
+                    alert("Password changed successfully.");
+                    $("#changePasswordModal").modal("hide");
+                    $("#changePasswordForm")[0].reset();
+                } else {
+                    alert("Failed to change password: " + result.message);
+                }
+            },
+            error: function() {
+                alert("An error occurred while changing the password.");
+            }
+        });
     });
 
     // Logout functionality
-    $('#logout').click(function(e) {
-        e.preventDefault();
+    $("#logout").click(function() {
         $.ajax({
-            type: "post",
             url: "../../src/routes/routes.php",
+            type: "POST",
             data: { type: "logout" },
-            success: function(data) {
+            success: function() {
                 window.location.href = "login.php";
             }
         });
     });
+
+    function loadUserInfo() {
+        $.ajax({
+            url: "../../src/routes/routes.php",
+            type: "POST",
+            data: { type: "getUserInfo" },
+            success: function(response) {
+                const user = JSON.parse(response);
+                $("#welcomeUsername").text(user.username);
+                $("#username").text(user.username);
+                $("#email").text(user.email);
+                $("#age").text(user.age);
+                $("#address").text(user.address);
+            },
+            error: function() {
+                alert("An error occurred while loading user information.");
+            }
+        });
+    }
 });

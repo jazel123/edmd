@@ -7,13 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="../lib/css/my.css">
-    <style>
-        .bg-image {
-            background-image: url('../image/logo.png');
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
+   
 </head>
 <body>
     <div class="container-fluid">
